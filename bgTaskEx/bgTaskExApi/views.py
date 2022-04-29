@@ -1,23 +1,32 @@
-from datetime import datetime
-import time
+from django.http import JsonResponse
 from rest_framework import viewsets
-from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.response import Response
+
+from .longRunningMethod import long_running_method
+
+from .taskHandler import TaskHandler, TaskProgress
 
 class bgTaskViewSet(viewsets.ViewSet):
-    # Create your views here.
-    @action(methods=['GET'],  detail=False, name='Put the task to background' )
-    def put_task_to_background( self, request ):
+	# Create your views here.
+	@action(methods=['GET'],  detail=False, name='Start the task to background' )
+	def start_long_running_task( self, request ):
 
-        input = request.GET[ 'input' ]
+		input = request.GET[ 'input' ]
 
-        return Response( status=status.HTTP_200_OK,
-                data=f"[{ datetime.now() }] input= { input }, value from Django" )
+		task_id = TaskHandler().start_task( long_running_method, [ input ] )
 
-def long_running_method( input ):
+		return JsonResponse({'task_id':task_id})
 
-	for i in range( 100 ):
-		time.sleep( 1 )
+	@action(methods=['GET'],  detail=False, name='Get Task Progress' )
+	def get_task_progress( self, request ):
 
-	return f"[{ datetime.now() }] input= { input }, value from Django"
+		task_id = request.GET[ 'task_id' ]
+
+		task_progress : TaskProgress = TaskHandler.get_task_progress( task_id )
+
+		return JsonResponse( { 'task_progress' : vars(task_progress) } )
+
+
+
+
+
