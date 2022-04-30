@@ -41,7 +41,6 @@ class TaskProgress:
 		self.error_message = error_message
 
 		cache.set( self.task_id, self, 3600 )
-		print( f'{status=}, {progress_message=}, {output=}' )
 
 	def get_task_id( self ):
 		return self.task_id

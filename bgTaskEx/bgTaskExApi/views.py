@@ -24,7 +24,7 @@ class bgTaskViewSet(viewsets.ViewSet):
 
 		task_progress : TaskProgress = TaskHandler.get_task_progress( task_id )
 
-		return JsonResponse( { 'task_progress' : vars(task_progress) } )
+		return JsonResponse( vars(task_progress) )
 
 
 
