@@ -32,13 +32,11 @@ class TaskProgress:
 	def set( self,
 		status : Enum,
 		progress_message : Union[ str, None ] = None,
-		output : Union[ str, None ] = None,
-		error_message : Union[ str, None ] = None, ) -> object:
+		output : Union[ str, None ] = None,) -> object:
 
 		self.status = status.value
 		self.progress_message = progress_message
 		self.output = output
-		self.error_message = error_message
 
 		cache.set( self.task_id, self, 3600 )
 
@@ -49,4 +47,3 @@ class Status(Enum):
 	STARTED = 'STARTED'
 	RUNNING = 'RUNNING'
 	SUCCESS = 'SUCCESS'
-	ERROR = 'ERROR'
