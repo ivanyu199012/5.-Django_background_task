@@ -11,38 +11,39 @@ class MyTests(SimpleTestCase):
 		input = 'aaaaaa'
 		print( f'{ input= }' )
 
-		res = self.client.get( f'/bgTaskExAPI/start_long_running_task/?input={ input }' )
+		task_id = self.__start_task( input )
 
+		while True:
+
+			time.sleep( 1 )
+			result_dict = self.__get_task_progress_response( task_id )
+
+			if result_dict[ 'status' ] == "SUCCESS":
+				self.print_output(result_dict)
+				break
+
+			self.print_progress_message(result_dict)
+
+	def print_output(self, result_dict):
+		output = result_dict[ "output" ]
+		print( f'{ output= }' )
+
+	def print_progress_message(self, result_dict):
+		progress_message = result_dict[ 'progress_message' ]
+		print( f'{ progress_message= }' )
+
+	def __start_task( self, input ):
+		res = self.client.get( f'/bgTaskExAPI/start_long_running_task/?input={ input }' )
 		self.assertEqual( res.status_code, 200 )
 
 		task_id = res.json()[ 'task_id' ]
 		UUID_V1_PATTERN = re.compile( '[a-f0-9]{8}-[a-f0-9]{4}-1[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$', re.IGNORECASE)
 		self.assertEqual( UUID_V1_PATTERN.match( task_id ) is not None, True )
 
-		status_code, res = self.__get_task_progress_response( task_id )
-		self.assertEqual( status_code, 200 )
-
-		status = res.json()[ "status" ]
-		self.assertEqual( status == "RUNNING" or status == "STARTED" , True )
-
-		while True:
-
-			time.sleep( 1 )
-			status_code, res = self.__get_task_progress_response( task_id )
-
-			self.assertEqual( status_code, 200 )
-
-			result = res.json()
-			if result[ 'status' ] == "SUCCESS":
-				output = result[ "output" ]
-				# check if it is non-empty string
-				self.assertEqual( bool( output and output.strip() ), True )
-				print( f'{ output= }' )
-				break
-
-			progress_message = result[ 'progress_message' ]
-			print( f'{ progress_message= }' )
+		return task_id
 
 	def __get_task_progress_response( self, task_id : str ):
 		res = self.client.get( f'/bgTaskExAPI/get_task_progress/?task_id={ task_id }' )
-		return res.status_code, res
+		self.assertEqual( res.status_code, 200 )
+
+		return res.json()

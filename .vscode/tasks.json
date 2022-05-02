@@ -4,7 +4,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "echo",
+			"label": "Git Pull",
 			"type": "shell",
 			"command": "git pull",
 			"runOptions": { "runOn": "folderOpen" }
