@@ -9,12 +9,12 @@ class TaskHandler:
 
 	def start_task(self, method, args):
 
-		taskProgress = TaskProgress()
-		t = threading.Thread( target=method, args=[ *args, taskProgress ] )
+		task_progress = TaskProgress()
+		t = threading.Thread( target=method, args=[ *args, task_progress ] )
 		t.setDaemon(True)
 		t.start()
 
-		return taskProgress.get_task_id()
+		return task_progress.get_task_id()
 
 	@staticmethod
 	def get_task_progress( task_id : str ):

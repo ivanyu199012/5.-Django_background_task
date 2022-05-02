@@ -4,13 +4,13 @@ import time
 from .taskHandler import Status
 
 
-def long_running_method( input : str, taskProgress ):
+def long_running_method( input : str, task_progress ):
 
-	taskProgress.set( Status.STARTED, progress_message="The process has been started" )
+	task_progress.set( Status.STARTED, progress_message="The process has been started" )
 
 	for i in range( 20 ):
 		time.sleep( 0.5 )
-		taskProgress.set( Status.RUNNING, progress_message=f"{ 5 * i + 1 }% has been processed" )
+		task_progress.set( Status.RUNNING, progress_message=f"{ 5 * i + 1 }% has been processed" )
 
 	output = f"[{ datetime.now() }] input= { input }, value from Django"
-	taskProgress.set( Status.SUCCESS, output=output )
+	task_progress.set( Status.SUCCESS, output=output )

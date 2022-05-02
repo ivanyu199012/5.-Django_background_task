@@ -12,6 +12,7 @@ class MyTests(SimpleTestCase):
 		print( f'{ input= }' )
 
 		task_id = self.__start_task( input )
+		print( f'{ task_id= }' )
 
 		while True:
 
@@ -25,12 +26,14 @@ class MyTests(SimpleTestCase):
 			self.print_progress_message(result_dict)
 
 	def print_output(self, result_dict):
+		status = result_dict[ 'status' ]
 		output = result_dict[ "output" ]
-		print( f'{ output= }' )
+		print( f'{status=}, { output= }' )
 
 	def print_progress_message(self, result_dict):
+		status = result_dict[ 'status' ]
 		progress_message = result_dict[ 'progress_message' ]
-		print( f'{ progress_message= }' )
+		print( f'{ status= },{ progress_message= }' )
 
 	def __start_task( self, input ):
 		res = self.client.get( f'/bgTaskExAPI/start_long_running_task/?input={ input }' )
