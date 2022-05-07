@@ -4,9 +4,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Git Pull",
+			"label": "Git Fetch & Pull",
 			"type": "shell",
-			"command": "git pull",
+			"command": "git fetch & git pull",
 			"runOptions": { "runOn": "folderOpen" }
 		}
 	]
